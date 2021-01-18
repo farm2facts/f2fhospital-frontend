@@ -34,7 +34,7 @@
             <v-list-item :to="{name: 'Signin'}" v-if="!signedIn">
               <v-list-item-title>Sign In</v-list-item-title>
             </v-list-item>
-            <v-list-item v-if="signedIn" @click="testprofile">
+            <v-list-item v-if="signedIn" :to="{name: 'UserProfile'}">
               <v-list-item-title>My Profile</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -76,9 +76,6 @@ export default {
         .then(response => console.log(response))
         .catch(error => console.log(error))
     },
-    testprofile(){
-      console.log(localStorage)
-    }
     }
 }
 </script>

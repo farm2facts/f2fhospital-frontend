@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <!-- <Signin /> -->
+    {{profile}}
   </div>
 </template>
 
@@ -13,6 +14,20 @@ export default {
   components: {
     // HelloWorld,
     // Signin
+  },
+  data() {
+    return {
+      profile: []
+    }
+  },
+  methods: {
+      created() {
+        if (localStorage.signedIn){
+          this.$http.secured.get('api/hospital_summaries')
+            .then(response => {this.profile = response.data})
+            .catch(error => console.log(error))
+        }
+      }
   }
 }
 </script>

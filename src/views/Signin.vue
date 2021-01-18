@@ -2,8 +2,13 @@
   <div class="max-w-sm m-auto my-8">
       <v-form class="form" @submit.prevent="signin">
           <div class="text-red" v-if="error">{{ error }}</div>
-          <v-text-field label="Email Address" dense v-model="email" placeholder="andy@web-crunch.com"></v-text-field>
-          <v-text-field label="Password" dense v-model="password" placeholder="password"></v-text-field>
+          <v-text-field label="Email Address" v-model="email" placeholder="andy@web-crunch.com"></v-text-field>
+          <v-text-field 
+            label="Password"
+            v-model="password"
+            :append-icon="showpw ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showpw ? 'text' : 'password'"
+            @click:append="showpw = !showpw"></v-text-field>
           <v-btn @click="signin">Sign In</v-btn>
           <v-btn :to="{name: 'Signup'}">Sign Up</v-btn>
       </v-form>
@@ -17,7 +22,8 @@ export default {
     return {
       email: '',
       password: '',
-      error: ''
+      error: '',
+      showpw: false
     }
   },
   created () {

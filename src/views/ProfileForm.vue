@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form-wizard class="form" title="Hospital Profile" subtitle="Please complete this form..." color="#008cff" stepSize="sm">
+        <form-wizard class="form" title="Hospital Profile" subtitle="Please complete this form..." color="#008cff" stepSize="sm" @on-complete="createProfile">
             <tab-content title="Summary" :beforeChange="sendSummary">
                 <v-row>
                     <v-col>
@@ -57,7 +57,7 @@
                         <v-select v-model="summary.food_procurement_policy" label="Who makes decisions on hospital food procurement policy?"></v-select>
                         <v-select v-model="summary.food_system_staff" label="Who makes decisions on hospital food system staffing?"></v-select>
                         <!-- TODO HOW DO I PASS FILE INFORMATION? -->
-                        <v-file-input label="Upload Logo Here"></v-file-input>
+                        <!-- <v-file-input label="Upload Logo Here"></v-file-input> -->
                     </v-col>
                     <v-col>
                         <v-select v-model="summary.food_menus" label="Who makes decisions on hospital food menus?"></v-select>
@@ -74,7 +74,7 @@
                 <!-- <div> -->
                     <p>What staff positions do you have at your hospital? Identify all that apply.</p>
                     <v-row>
-                        <v-checkbox class="check" v-model="mfy" label="Manager, full time, year round (only salaried)"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="mfy" label="Manager, full time, year round (only salaried)"></v-checkbox>
                         <v-text-field class="textbox"
                             :disabled="!mfy"
                             label="Wage/salary (month)"
@@ -82,7 +82,7 @@
                             ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="mpy" label="Manager, part time, year round"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="mpy" label="Manager, part time, year round"></v-checkbox>
                         <v-text-field
                             :disabled="!mpy"
                             label="Wage/salary (month)"
@@ -90,7 +90,7 @@
                             ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="mfs" label="Manager, full time, seasonal"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="mfs" label="Manager, full time, seasonal"></v-checkbox>
                         <v-text-field
                             :disabled="!mfs"
                             label="Wage/salary (month)"
@@ -98,7 +98,7 @@
                             ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="mps" label="Manager, part time, seasonal"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="mps" label="Manager, part time, seasonal"></v-checkbox>
                         <v-text-field
                             :disabled="!mps"
                             label="Wage/salary (month)"
@@ -106,7 +106,7 @@
                             ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="d" label="Dietician"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="d" label="Dietician"></v-checkbox>
                         <v-text-field
                             :disabled="!d"
                             label="Wage/salary (month)"
@@ -114,7 +114,7 @@
                         ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="c" label="Chef(s)"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="c" label="Chef(s)"></v-checkbox>
                         <v-text-field
                             :disabled="!c"
                             label="Wage/salary (month)"
@@ -122,7 +122,7 @@
                         ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="pc" label="Prep Cook"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="pc" label="Prep Cook"></v-checkbox>
                         <v-text-field
                             :disabled="!pc"
                             label="Wage/salary (month)"
@@ -130,7 +130,7 @@
                         ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="da" label="Dietary Aid">
+                        <v-checkbox :ripple="false" class="check" v-model="da" label="Dietary Aid">
                             <template v-slot:prepend>
                                 <v-tooltip bottom max-width="300">
                                 <template v-slot:activator="{ on }">
@@ -147,7 +147,7 @@
                             ></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-checkbox class="check" v-model="other" label="Other"></v-checkbox>
+                        <v-checkbox :ripple="false" class="check" v-model="other" label="Other"></v-checkbox>
                         <v-text-field
                             :disabled="!other"
                             label="Wage/salary (month)"
@@ -195,7 +195,7 @@
                 <p>Identify whether the following product categories are exempt from sales tax.  Complete all that apply. </p>
                 <v-data-table :headers="headers" :items="tax_exempt_categories" hide-default-footer>
                     <template v-slot:[`item.exempt`]="{ item }">
-                        <v-simple-checkbox v-model="item.exempt">
+                        <v-simple-checkbox :ripple="false" v-model="item.exempt">
                         </v-simple-checkbox>
                     </template>
                 </v-data-table>
@@ -224,15 +224,14 @@
                 <!-- <v-checkbox v-for="item in communications" :key="item" :label="item"></v-checkbox> -->
                 <p>Identify how you communicate about your food offerings. Select all that apply.</p>
                 <v-row>
-                    
                     <v-col>
-                        <v-checkbox v-for="item in filteredItems(1,3)" :key="item" :label="item" :value="item" v-model="community.list_communications"></v-checkbox>
+                        <v-checkbox :ripple="false" v-for="item in filteredItems(1,3)" :key="item" :label="item" :value="item" v-model="community.list_communications"></v-checkbox>
                     </v-col>
                     <v-col>
-                        <v-checkbox v-for="item in filteredItems(2,3)" :key="item" :label="item" :value="item" v-model="community.list_communications"></v-checkbox>
+                        <v-checkbox :ripple="false" v-for="item in filteredItems(2,3)" :key="item" :label="item" :value="item" v-model="community.list_communications"></v-checkbox>
                     </v-col>
                     <v-col>
-                        <v-checkbox v-for="item in filteredItems(3,3)" :key="item" :label="item" :value="item" v-model="community.list_communications"></v-checkbox>
+                        <v-checkbox :ripple="false" v-for="item in filteredItems(3,3)" :key="item" :label="item" :value="item" v-model="community.list_communications"></v-checkbox>
                     </v-col>
                 </v-row>
                 <v-select label="Do you produce an annual report?" :items="yn" v-model="community.has_annualreport"></v-select>
@@ -258,6 +257,7 @@ export default {
     },
     data(){
         const summary = {
+            // user_id: "",
             street_addr: "",
             city: "",
             state: "",
@@ -279,9 +279,9 @@ export default {
             food_menus: "",
             food_system_staff: "",
             info_requests: "",
-            logo_name: "",
-            logo_content_type: "",
-            logo_data: ""
+            // logo_name: "",
+            // logo_content_type: "",
+            // logo_data: ""
         }
         const management = {
             num_staff: "",
@@ -428,12 +428,19 @@ export default {
     methods: {
         ...mapActions(['newSummary']),
         sendSummary(){
-            this.newSummary(this.$http, this.summary)
-            // console.log(this.summary)
+            // this.newSummary(this.$http, this.summary)
+            console.log(this.summary)
+            this.$http.secured.post('/api/hospital_summaries', {hospital_summary: this.summary})
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
+            // commit('createSummary', summary)
             return true
         },
         sendManagement(){
             console.log(this.management)
+        },
+        createProfile(){
+            alert('Submitted!')
         },
         filteredItems(column, columns) {
             const self = this; // Enables us to pass this to the method

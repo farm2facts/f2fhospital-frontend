@@ -8,6 +8,11 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import router from './router'
 import VueAxios from 'vue-axios'
 import {securedAxiosInstance, plainAxiosInstance} from './backend/axios/index'
+// import Ripple from 'vuetify/lib/directives/ripple';
+// Vue.use(Vuetify, {
+//   directives: {
+//     Ripple,
+//   },
 
 Vue.use(VueFormWizard)
 Vue.use(VueAxios, {
