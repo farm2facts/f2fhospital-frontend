@@ -78,7 +78,7 @@
                         <v-text-field class="textbox"
                             :disabled="!mfy"
                             label="Wage/salary (month)"
-                            v-model="management.mfy"
+                            v-model="management.manager_ft_yr"
                             ></v-text-field>
                     </v-row>
                     <v-row>
@@ -86,7 +86,7 @@
                         <v-text-field
                             :disabled="!mpy"
                             label="Wage/salary (month)"
-                            v-model="management.mpy"
+                            v-model="management.manager_pt_yr"
                             ></v-text-field>
                     </v-row>
                     <v-row>
@@ -94,7 +94,7 @@
                         <v-text-field
                             :disabled="!mfs"
                             label="Wage/salary (month)"
-                            v-model="management.mfs"
+                            v-model="management.manager_ft_seasonal"
                             ></v-text-field>
                     </v-row>
                     <v-row>
@@ -102,7 +102,7 @@
                         <v-text-field
                             :disabled="!mps"
                             label="Wage/salary (month)"
-                            v-model="management.mps"
+                            v-model="management.manager_pt_seasonal"
                             ></v-text-field>
                     </v-row>
                     <v-row>
@@ -202,8 +202,8 @@
                 <p>Services. Do you supply food for hospital service activities on the hospital campus? Select all that apply.</p>
                 <v-checkbox v-for="item in ServiceItems" v-bind:key="item" :value="item" :label="item" v-model="vendors.services" dense>
                 </v-checkbox>
-                <v-select label="Does your hospital support USDA food security programs?" :items="yn" v-model="vendors.USDA_food_security"></v-select>
-                <v-textarea v-if="vendors.USDA_food_security" label="Please explain how your hospital supports USDA food security programs" v-model="vendors.USDA_food_security_how"></v-textarea>
+                <v-select label="Does your hospital support USDA food security programs?" :items="yn" v-model="vendors.supports_USDA_food_security"></v-select>
+                <v-textarea v-if="vendors.supports_USDA_food_security" label="Please explain how your hospital supports USDA food security programs" v-model="vendors.USDA_food_security_how"></v-textarea>
                 <v-select label="Is Women, Infants, and Children Farmers Market Nutritional Program (WIC FMNP) available in your area, and does your hospital acceept?" :items="yn" v-model="vendors.accepts_WICFMNP"></v-select>
                 <!-- <v-select label="Does your hospital accept WIC FMNP?" :items="yn" v-model="wicfmnp"></v-select> -->
                 <v-text-field v-if="vendors.accepts_WICFMNP" label="Who offers WIC FMNP at your hospital?" v-model="vendors.who_offers_WICFMNP"></v-text-field>
@@ -285,10 +285,10 @@ export default {
         }
         const management = {
             num_staff: "",
-            mfy: "",
-            mpy: "",
-            mfs: "",
-            mps: "",
+            manager_ft_yr: "",
+            manager_pt_yr: "",
+            manager_ft_seasonal: "",
+            manager_pt_seasonal: "",
             dietician: "",
             chef: "",
             prepcook: "",
@@ -315,7 +315,7 @@ export default {
             // craft_art_services_exempt: null,
             // REMEMBER to also send over tax_exempt_categories
             services: [],
-            USDA_food_security: null,
+            supports_USDA_food_security: null,
             USDA_food_security_how: "",
             accepts_WICFMNP: null,
             who_offers_WICFMNP: "",
@@ -334,7 +334,7 @@ export default {
             key_partners: "",
             list_communications: [],
             has_annualreport: null,
-            annualreport: "",
+            // annualreport: "",
         }
         // SUMMARY  
         const states = ['Alabama','Alaska', 'Arizona', 'Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
@@ -428,7 +428,6 @@ export default {
     methods: {
         ...mapActions(['newSummary']),
         sendSummary(){
-            // this.newSummary(this.$http, this.summary)
             console.log(this.summary)
             this.$http.secured.post('/api/hospital_summaries', {hospital_summary: this.summary})
                 .then(response => console.log(response))
@@ -438,8 +437,27 @@ export default {
         },
         sendManagement(){
             console.log(this.management)
+            this.$http.secured.post('/api/hopital_managements', {hospital_management: this.management})
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
+        },
+        sendVendor(){
+            this.$http.secured.post('/api/hospital_vendors', {hospital_vendor: this.vendors})
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
+        },
+        sendCommunity(){
+            this.$http.secured.post('/api/hopital_community', {hospital_community: this.community})
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
         },
         createProfile(){
+            this.sendSummary()
+            this.sendManagement()
+            
+
+            this.sendVendor()
+            this.sendCommunity()
             alert('Submitted!')
         },
         filteredItems(column, columns) {

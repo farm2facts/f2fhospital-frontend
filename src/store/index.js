@@ -9,18 +9,38 @@ export default new Vuex.Store ({
     //     HospitalProfiles
     // }
     state: {
-        summaries: []
+        summaries: [],
+        managements: [],
+        vendors: [],
+        communities: []
     },
     getters: {
         getProfile: state => state.summaries
     },
     actions: {
         newSummary({commit}, http, summary){
-            // HOWWWW TO GET THE VUE INSTANCE into vuex
         http.secured.post('/api/hospital_summaries', summary)
             .then(response => console.log(response))
             .catch(error => console.log(error))
             commit('createSummary', summary)
+        },
+        newManagement({commit}, http, management){
+            http.secured.post('/api/hopital_managements', management)
+                .then(response=> console.log(response))
+                .catch(error=> console.log(error))
+            commit('createManagement',management)
+        },
+        newVendor({commit}, http, vendors){
+            http.secured.post('/api/hospital_vendors', vendors)
+                .then(response=> console.log(response))
+                .catch(error=> console.log(error))
+            commit('createVendor', vendors)
+        },
+        newCommunity({commit}, http, community){
+            http.secured.post('/api/hospital_communities', community)
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
+            commit('createCommunity', community)
         },
         async fetchProfile({ commit }, http){
             const response = await http.secured.get('/api/hospital_summaries')
@@ -35,10 +55,17 @@ export default new Vuex.Store ({
         createSummary(state, summary){
             state.summaries.unshift(summary)
         },
-        // setProfile: (state, profile) => (state.summaries = profile)
+        createManagement(state, management){
+            state.managements.unshift(management)
+        },
+        createVendor(state, vendor){
+            state.vendors.unshift(vendor)
+        },
+        createCommunity(state, community){
+            state.communities.unshift(community)
+        },
         setProfile(state, profile){
             state.summaries = profile
-            // console.log(state.summaries)
         }
     }
 })
