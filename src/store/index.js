@@ -1,13 +1,9 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-// import HospitalProfiles from './modules/hospital_profiles.js'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store ({
-    // modules: {
-    //     HospitalProfiles
-    // }
     state: {
         summaries: [],
         managements: [],

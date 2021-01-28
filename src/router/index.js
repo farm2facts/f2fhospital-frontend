@@ -9,11 +9,6 @@ import UserProfile from '../views/UserProfile.vue'
 Vue.use(VueRouter)
 
   const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
   {
     path: '/signup',
     name: 'Signup',
