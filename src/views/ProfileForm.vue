@@ -1,7 +1,7 @@
 <template>
     <div>
         <form-wizard class="form" title="Hospital Profile" subtitle="Please complete this form..." color="#008cff" stepSize="sm" @on-complete="createProfile">
-            <tab-content title="Summary" :beforeChange="sendSummary">
+            <tab-content title="Summary">
                 <v-row>
                     <v-col>
                         <v-text-field v-model="summary.street_addr" label="Street Address"></v-text-field>
@@ -244,20 +244,10 @@
     </div>
 </template>
 <script>
-// /Users/rachelfu/Desktop/f2f-hospital-frontend/src/components/HospitalVendors.vue
-import {mapActions} from 'vuex';
-// import HospitalManagement from '@/components/HospitalManagement.vue';
-// import HospitalVendors from '@/components/HospitalVendors.vue';
-// import HospitalCommunity from '@/components/HospitalCommunity.vue';
+// import {mapActions} from 'vuex';
 export default {
-    components: {
-        // HospitalManagement,
-        // HospitalVendors,
-        // HospitalCommunity
-    },
     data(){
         const summary = {
-            // user_id: "",
             street_addr: "",
             city: "",
             state: "",
@@ -305,14 +295,15 @@ export default {
             state_sales_tax: "",
             county_sales_tax: "",
             municipality_sales_tax: "",
-            // produce_exempt: false,
-            // meat_seafood_exempt: null,
-            // dairy_exempt: null,
-            // eggs_exempt: null,
-            // plant_flower_exempt: null,
-            // value_added_exempt: null,
-            // prepared_exempt: null,
-            // craft_art_services_exempt: null,
+
+            produce_exempt: null,
+            meat_seafood_exempt: null,
+            dairy_exempt: null,
+            eggs_exempt: null,
+            plant_flower_exempt: null,
+            value_added_exempt: null,
+            prepared_exempt: null,
+            craft_art_services_exempt: null,
             // REMEMBER to also send over tax_exempt_categories
             services: [],
             supports_USDA_food_security: null,
@@ -338,7 +329,6 @@ export default {
         }
         // SUMMARY  
         const states = ['Alabama','Alaska', 'Arizona', 'Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
-        // TODO how do I have them "explain" if they select the option "Other"
         const incorporated = ["Government","LLC","Non-profit","For profit","Partnership","Sole Propriertorship","Other"]
         const locations = ["Website","Manual","Market promotional materials","None of the above","Other"]
 
@@ -411,32 +401,21 @@ export default {
             ServiceItems,
             selectedServices: [],
             yn: [{text: "Yes", value: true},{text:"No", value: false}],
-            // supportsUSDA: null,
-            // wicfmnp: null,
-            // wiccvv: null,
-            // acceptsvouchers: null,
-            // offersincentives: null,
             vendors,
             // COMMUNITY
-            // staffonboard: null,
-            // annualreport: null,
             communications: ["Newsletter","Facebook","Instagram","Twitter","Youtube","Snapchat","Google+","Pinterest","Market websites","Newspaper","Other","None, we do not advertise our local sourcing of food we serve."],
-            // comm_used: [],
             community
         }
     },
     methods: {
-        ...mapActions(['newSummary']),
+        // ...mapActions(['newSummary']),
         sendSummary(){
-            console.log(this.summary)
             this.$http.secured.post('/api/hospital_summaries', {hospital_summary: this.summary})
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
-            // commit('createSummary', summary)
             return true
         },
         sendManagement(){
-            console.log(this.management)
             this.$http.secured.post('/api/hopital_managements', {hospital_management: this.management})
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
@@ -451,11 +430,32 @@ export default {
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
         },
+        prepareManagement(){
+            for (const l in this.tax_exempt_categories){
+                if (this.tax_exempt_categories[l].category == "Produce"){
+                    this.management.produce_exempt = this.tax_exempt_categories[l].exempt
+                } else if (this.tax_exempt_categories[l].category == "Meat & Seafood"){
+                    this.management.meat_seafood_exempt = this.tax_exempt_categories[l].exempt
+                } else if (this.tax_exempt_categories[l].category == "Dairy"){
+                    this.management.dairy_exempt = this.tax_exempt_categories[l].exempt
+                } else if (this.tax_exempt_categories[l].category == "Eggs"){
+                    this.management.eggs_exempt = this.tax_exempt_categories[l].exempt
+                } else if (this.tax_exempt_categories[l].category == "Plants & Flowers"){
+                    this.management.plant_flower_exempt = this.tax_exempt_categories[l].exempt
+                } else if (this.tax_exempt_categories[l].category == "Value-added"){
+                    this.management.value_added_exempt = this.tax_exempt_categories[l].exempt
+                } else if (this.tax_exempt_categories[l].category == "Prepared Food"){
+                    this.management.prepared_exempt = this.tax_exempt_categories[l].exempt
+                } else {
+                    this.management.craft_art_services_exempt = this.tax_exempt_categories[l].exempt
+                }
+
+            }
+        },
         createProfile(){
             this.sendSummary()
+            this.prepareManagement()
             this.sendManagement()
-            
-
             this.sendVendor()
             this.sendCommunity()
             alert('Submitted!')
